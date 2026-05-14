@@ -947,7 +947,7 @@ class Builder extends BuilderController
      */
     public function first(string|array ...$columns)
     {
-        if (count($columns)) $this->select($columns);
+        if (count($columns)) $this->select(...$columns);
 
         $build = $this->executeProcessor('select', $this->connection);
 
@@ -960,7 +960,7 @@ class Builder extends BuilderController
      */
     public function get(string|array ...$columns)
     {
-        if (count($columns)) $this->select($columns);
+        if (count($columns)) $this->select(...$columns);
 
         $build = $this->executeProcessor('select', $this->connection);
 
@@ -1099,5 +1099,19 @@ class Builder extends BuilderController
         $build = $this->executeProcessor('select', $this->connection);
 
         return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, count: true);
+    }
+
+    /**
+     * Execute the exists query
+     * @return bool
+     */
+    public function exists()
+    {
+        $build = $this->executeProcessor('exists', $this->connection);
+
+        $result = (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, false);
+        $result = is_array($result) ? $result['exists'] : $result->exists;
+
+        return $result ? true : false;
     }
 }

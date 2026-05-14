@@ -44,10 +44,8 @@ class Arr
 
     public static function get(array $array, int|string|array $keys, mixed $default = null)
     {
-        if (is_numeric($keys)) $keys = (int)[$keys];
+        if (is_numeric($keys)) $keys = [(int)$keys];
         else if (!is_array($keys)) $keys = explode('.', $keys);
-
-        if (!count($keys) or !array_key_exists($keys[0], $array)) return $default;
 
         foreach ($keys as $key) {
             if (!array_key_exists((string)$key, $array)) return $default;

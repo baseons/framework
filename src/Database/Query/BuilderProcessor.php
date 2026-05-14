@@ -642,6 +642,7 @@ class BuilderProcessor
         $order = $this->order;
 
         if ($command == 'select') $query = "$explain SELECT $distinct $columns FROM $table $join $where $group $having $raw $order $limit";
+        elseif ($command == 'exists') $query = "SELECT EXISTS(SELECT 1 FROM $table $join $where $group $having $raw $order $limit) AS exists";
         elseif ($command == 'insert') $query = $this->config['driver'] == 'pgsql' ? sprintf("INSERT INTO $table $insert %s $raw", $ignore ? 'ON CONFLICT DO NOTHING' : '') : sprintf("INSERT %s INTO $table $insert $raw", $ignore ? 'IGNORE' : '');
         elseif ($command == 'update') $query = "UPDATE $table $join $update $where $raw $limit";
         elseif ($command == 'delete') $query = "DELETE FROM $table $join $where $raw $limit";
