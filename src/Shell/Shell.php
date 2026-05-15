@@ -2,6 +2,8 @@
 
 namespace Baseons\Shell;
 
+use Baseons\Collections\System;
+
 /**
  * If you do not have the necessary permissions posix_kill may not work correctly.
  *
@@ -163,6 +165,8 @@ class Shell extends Lines
      */
     public static function running(int $pid)
     {
+        if (System::isLinux()) return file_exists("/proc/$pid");
+
         return posix_kill($pid, 0);
     }
 

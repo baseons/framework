@@ -107,9 +107,9 @@ class JobController
         return $list;
     }
 
-    public function     start()
+    public function start()
     {
-        Shell::exec('php ' . path('/') . ' && php base job:master > /dev/null 2>&1 &', name: env('APP_NAME', 'Baseons Job Master'));
+        Shell::exec('cd ' . path()->base() . ' && php base job:master > /dev/null 2>&1 &', name: env('APP_NAME', 'Baseons Job Master'));
 
         sleep(2);
 
