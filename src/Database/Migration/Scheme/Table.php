@@ -34,7 +34,7 @@ class Table
 
         Memory::addColumn($name, $type);
 
-        new TableOptions(Memory::$config['driver'])->unique()->nullable(false);
+        (new TableOptions(Memory::$config['driver']))->unique()->nullable(false);
     }
 
     public function varchar(string $name, int $size = 255)
