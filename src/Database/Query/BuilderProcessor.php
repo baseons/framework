@@ -630,22 +630,22 @@ class BuilderProcessor
         if (array_key_exists('limit', $this->params)) $this->limit($this->params['limit']);
 
         $table = empty($this->table_raw) ? $this->table : $this->table_raw;
-        $columns = $this->columns;
-        $where = $this->where;
-        $having = $this->having;
-        $group = $this->group;
-        $join = $this->join;
-        $insert = $this->insert;
-        $update = $this->update;
-        $raw = $this->raw;
-        $limit = $this->limit;
-        $order = $this->order;
+        // $columns = $this->columns;
+        // $where = $this->where;
+        // $having = $this->having;
+        // $group = $this->group;
+        // $join = $this->join;
+        // $insert = $this->insert;
+        // $update = $this->update;
+        // $raw = $this->raw;
+        // $limit = $this->limit;
+        // $order = $this->order;
 
-        if ($command == 'select') $query = "$explain SELECT $distinct $columns FROM $table $join $where $group $having $raw $order $limit";
-        elseif ($command == 'exists') $query = "SELECT EXISTS(SELECT 1 FROM $table $join $where $group $having $raw $order $limit) AS exists";
-        elseif ($command == 'insert') $query = $this->config['driver'] == 'pgsql' ? sprintf("INSERT INTO $table $insert %s $raw", $ignore ? 'ON CONFLICT DO NOTHING' : '') : sprintf("INSERT %s INTO $table $insert $raw", $ignore ? 'IGNORE' : '');
-        elseif ($command == 'update') $query = "UPDATE $table $join $update $where $raw $limit";
-        elseif ($command == 'delete') $query = "DELETE FROM $table $join $where $raw $limit";
+        if ($command == 'select') $query = "$explain SELECT $distinct $this->columns FROM $table $this->join $this->where $this->group $this->having $this->raw $this->order $this->limit";
+        elseif ($command == 'exists') $query = "SELECT EXISTS(SELECT 1 FROM $table $this->join $this->where $this->group $this->having $this->raw $this->order $this->limit) AS exists";
+        elseif ($command == 'insert') $query = $this->config['driver'] == 'pgsql' ? sprintf("INSERT INTO $table $this->insert %s $this->raw", $ignore ? 'ON CONFLICT DO NOTHING' : '') : sprintf("INSERT %s INTO $table $this->insert $this->raw", $ignore ? 'IGNORE' : '');
+        elseif ($command == 'update') $query = "UPDATE $table $this->join $this->update $this->where $this->raw $this->limit";
+        elseif ($command == 'delete') $query = "DELETE FROM $table $this->join $this->where $this->raw $this->limit";
 
         return [
             'query' => trim(preg_replace('/( ){2,}/', '$1', $query)),
