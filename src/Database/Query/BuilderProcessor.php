@@ -630,16 +630,6 @@ class BuilderProcessor
         if (array_key_exists('limit', $this->params)) $this->limit($this->params['limit']);
 
         $table = empty($this->table_raw) ? $this->table : $this->table_raw;
-        // $columns = $this->columns;
-        // $where = $this->where;
-        // $having = $this->having;
-        // $group = $this->group;
-        // $join = $this->join;
-        // $insert = $this->insert;
-        // $update = $this->update;
-        // $raw = $this->raw;
-        // $limit = $this->limit;
-        // $order = $this->order;
 
         if ($command == 'select') $query = "$explain SELECT $distinct $this->columns FROM $table $this->join $this->where $this->group $this->having $this->raw $this->order $this->limit";
         elseif ($command == 'exists') $query = "SELECT EXISTS(SELECT 1 FROM $table $this->join $this->where $this->group $this->having $this->raw $this->order $this->limit) AS exists";
