@@ -56,6 +56,7 @@ class HttpServer
             if (!$request->isCompleted()) return;
 
             $response->setHeader('server', 'Baseons Framework');
+            $response->setHeader('x-powered-by', 'Baseons Framework');
 
             $request_data = get_object_vars($request);
             $request_data['content'] = $request->getContent();

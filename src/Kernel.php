@@ -101,6 +101,7 @@ class Kernel
         $_GET = filterInput($_GET ?? []);
 
         response()->header('server', 'Baseons Framework');
+        response()->header('x-powered-by', 'Baseons Framework');
 
         (new Exceptions)->handler(function () {
             // start ob

@@ -82,6 +82,7 @@ class WebSocketServer
 
             $this->server->on('handshake', function (HttpRequest $request, Response $response) use ($params, $class) {
                 $response->header('server', 'Baseons Framework');
+                $response->header('x-powered-by', 'Baseons Framework');
 
                 if (empty($request->header['sec-websocket-key'])) {
                     $response->status(403);
