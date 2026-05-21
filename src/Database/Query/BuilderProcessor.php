@@ -632,7 +632,7 @@ class BuilderProcessor
         $table = empty($this->table_raw) ? $this->table : $this->table_raw;
 
         if ($command == 'select') $query = "$explain SELECT $distinct {$this->columns} FROM $table {$this->join} {$this->where} {$this->group} {$this->having} {$this->raw} {$this->order} {$this->limit}";
-        elseif ($command == 'exists') $query = "SELECT EXISTS(SELECT 1 FROM $table {$this->join} {$this->where} {$this->group} {$this->having} {$this->raw} {$this->order} {$this->limit}) AS exists";
+        elseif ($command == 'exists') $query = "SELECT EXISTS(SELECT 1 FROM $table {$this->join} {$this->where} {$this->group} {$this->having} {$this->raw} {$this->order} {$this->limit}) AS " . $this->quotes('exists');
         elseif ($command == 'insert') $query = $this->config['driver'] == 'pgsql' ? sprintf("INSERT INTO $table $this->insert %s {$this->raw}", $ignore ? 'ON CONFLICT DO NOTHING' : '') : sprintf("INSERT %s INTO $table $this->insert {$this->raw}", $ignore ? 'IGNORE' : '');
         elseif ($command == 'update') $query = "UPDATE $table {$this->join} $this->update {$this->where} {$this->raw} {$this->limit}";
         elseif ($command == 'delete') $query = "DELETE FROM $table {$this->join} {$this->where} {$this->raw} {$this->limit}";
