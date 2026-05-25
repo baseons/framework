@@ -54,17 +54,7 @@ class BaseonsCommands
                 Console::command(':sessions', 'CommandCleaning::sessions')->description('clear sessions files');
             });
 
-            Console::title('Maker controller')->prefix('make:')->group(function () {
-                Console::command('api {name}', 'CommandMake::api')->description('create a new api controller');
-                Console::command('console {name}', 'CommandMake::console')->description('create a new console controller');
-                Console::command('job {name}', 'CommandMake::job')->description('create a new job controller');
-                Console::command('web {name}', 'CommandMake::web')->description('create a new web controller');
-
-                Console::command('ws {name}', 'CommandMake::ws')->description('create a new websocket server controller');
-                Console::command('http {name}', 'CommandMake::http')->description('create a new http server controller');
-            });
-
-            Console::title('Maker other')->prefix('make:')->group(function () {
+            Console::title('Maker')->prefix('make:')->group(function () {
                 Console::command('env', 'CommandMake::env')->description('create a env file');
                 Console::command('key', 'CommandMake::key')->description('make or update app key on env file');
                 Console::command('migration {name} {table?}', 'CommandMake::migration')->description('create a new migration');
@@ -74,6 +64,15 @@ class BaseonsCommands
                 Console::command('mail {name}', 'CommandMake::mail')->description('create a new mail');
                 Console::command('middleware {name}', 'CommandMake::middleware')->description('create a new middleware');
                 Console::command('test {name}', 'CommandMake::test')->description('create a new test');
+            });
+
+            Console::title('Maker controller')->prefix('make:')->group(function () {
+                Console::command('api {name}', 'CommandMake::api')->description('create a new api controller');
+                Console::command('console {name}', 'CommandMake::console')->description('create a new console controller');
+                Console::command('job {name}', 'CommandMake::job')->description('create a new job controller');
+                Console::command('web {name}', 'CommandMake::web')->description('create a new web controller');
+                Console::command('ws {name}', 'CommandMake::ws')->description('create a new websocket server controller');
+                Console::command('http {name}', 'CommandMake::http')->description('create a new http server controller');
             });
         });
     }
