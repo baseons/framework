@@ -145,6 +145,28 @@ class Validator
         return $this;
     }
 
+    public function min(string|int|array $name, int $leters, string $message = 'min number')
+    {
+        if (!is_array($name)) $name = [$name];
+
+        foreach ($name as $n) {
+            if ($this->has($n) and is_numeric(filter_var($this->data[$n], FILTER_SANITIZE_NUMBER_INT)) and $this->data[$n] < $leters) $this->error($n, $message);
+        }
+
+        return $this;
+    }
+
+    public function max(string|int|array $name, int $leters, string $message = 'max number')
+    {
+        if (!is_array($name)) $name = [$name];
+
+        foreach ($name as $n) {
+            if ($this->has($n) and is_numeric(filter_var($this->data[$n], FILTER_SANITIZE_NUMBER_INT)) and $this->data[$n] > $leters) $this->error($n, $message);
+        }
+
+        return $this;
+    }
+
     public function minLeters(string|int|array $name, int $leters, string $message = 'min leters')
     {
         if (!is_array($name)) $name = [$name];
