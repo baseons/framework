@@ -15,7 +15,7 @@ class HTTP
 
     public function __construct(string|null $url = null)
     {
-        if($url) $this->url = $url;
+        if ($url) $this->url = $url;
 
         return $this;
     }
@@ -39,8 +39,14 @@ class HTTP
         return $this;
     }
 
-    public function header(string $name, string|null $value)
+    public function header(string|array $name, string|null $value)
     {
+        if (is_array($value)) {
+            foreach ($name as $key => $value) $this->header[$key] = $key . ': ' . $value;
+
+            return $this;
+        }
+
         if ($value === null) unset($this->header[$name]);
         else $this->header[$name] = $name . ': ' . $value;
 
