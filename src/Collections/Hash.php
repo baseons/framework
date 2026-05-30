@@ -129,7 +129,7 @@ class Hash
             return hash_equals($hmac, $calculatedHmac) ? $decrypted : null;
         }
     }
-    
+
     public static function otp()
     {
         return new OTP();
@@ -145,10 +145,10 @@ class Hash
         $base64UrlHeader = self::base64UrlEncode($header);
         $base64UrlPayload = self::base64UrlEncode(json_encode($payload));
 
-        $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
+        $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $secret, true);
         $base64UrlSignature = self::base64UrlEncode($signature);
 
-        return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+        return $base64UrlHeader . '.' . $base64UrlPayload . '.' . $base64UrlSignature;
     }
 
     /**
@@ -162,7 +162,7 @@ class Hash
 
         [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = $parts;
 
-        $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true);
+        $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $secret, true);
         $validSignature = self::base64UrlEncode($signature);
 
         if (!hash_equals($validSignature, $base64UrlSignature)) return null;
@@ -199,16 +199,16 @@ class Hash
     private static function base64UrlEncode(string $data)
     {
         $base64 = base64_encode($data);
-        
+
         return str_replace(['+', '/', '='], ['-', '_', ''], $base64);
     }
 
     private static function base64UrlDecode(string $data)
     {
         $remainder = strlen($data) % 4;
-        
+
         if ($remainder) $data .= str_repeat('=', 4 - $remainder);
-        
+
         return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
     }
 }
