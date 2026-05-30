@@ -41,7 +41,7 @@ class HTTP
 
     public function header(string|array $name, string|null $value = null)
     {
-        if (is_array($value)) {
+        if (is_array($name)) {
             foreach ($name as $key => $value) $this->header[$key] = $key . ': ' . $value;
 
             return $this;
