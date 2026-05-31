@@ -13,7 +13,7 @@ class Route
     {
         if (!empty($params[0])) if (is_array($params[0])) $params = $params[0];
 
-        $names = Kernel::getMemory('route.names',[]);
+        $names = Kernel::getMemory('route.names', []);
 
         if (array_key_exists($name, $names)) {
             $route = $names[$name];
@@ -26,7 +26,7 @@ class Route
 
             $route = str_replace(['/{?}', '{?}'], '', $route);
 
-            return request()->url($route);
+            return url($route);
         }
 
         return null;
