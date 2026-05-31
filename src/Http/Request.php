@@ -69,6 +69,11 @@ class Request
         return $method;
     }
 
+    public function https()
+    {
+        return (!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+    }
+
     /**
      * Current domain
      * @return string|null
@@ -78,60 +83,12 @@ class Request
         return $_SERVER['SERVER_NAME'] ?? null;
     }
 
-    public function https()
-    {
-        if ((!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') ||
-            (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
-            (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
-        ) return true;
-
-        return false;
-    }
-
     /**
      * @return string
      */
-    public function url(string|null $path = null)
+    public function url()
     {
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $http = $this->https() ? 'https://' : 'http://';
-            $host = $http . $_SERVER['HTTP_HOST'];
-        } else $host = config()->app('APP_URL', 'http://localhost:3000');
-
-        return  $host . (!empty($path) ? '/' . trim($path, '/') : '');
-    }
-
-    public function urlPath()
-    {
-        $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
-        return '/' . $path;
-    }
-
-    /**
-     * @return string
-     */
-    public function urlFull(string|null $path = null)
-    {
-        $url_path = $this->urlPath();
-        return trim($this->url($url_path) . (!empty($path) ? '/' . trim($path, '/') : ''), '/');
-    }
-
-    /**
-     * @return string
-     */
-    public function urlFullQuery(array|null $query = null)
-    {
-        $url_query = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_QUERY);
-
-        if ($query !== null) {
-            $gets = filter_input_array(INPUT_GET, $_GET, FILTER_SANITIZE_SPECIAL_CHARS);
-
-            foreach ($query as $key => $value) $gets[$key] = $value;
-
-            $url_query = http_build_query($gets);
-        }
-
-        return $this->urlFull() . (!empty($url_query) ? '?' . $url_query : '');
+        return ($this->https() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     public function userAgent()

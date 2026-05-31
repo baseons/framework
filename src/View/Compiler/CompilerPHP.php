@@ -80,9 +80,9 @@ class CompilerPHP
             // url
             elseif ($value['tag'] == 'url') {
                 if (!empty($value['value'])) {
-                    $this->view = str_replace($value['original'], '<?php echo request()->url' . $value['value'] . ' ?>', $this->view);
+                    $this->view = str_replace($value['original'], '<?php echo url' . $value['value'] . ' ?>', $this->view);
                 } else {
-                    $this->view = str_replace($value['original'], '<?php echo request()->url(); ?>', $this->view);
+                    $this->view = str_replace($value['original'], '<?php echo url(); ?>', $this->view);
                 }
 
                 continue;

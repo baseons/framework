@@ -3,7 +3,6 @@
 use Baseons\Collections\Arr;
 use Baseons\Collections\Config;
 use Baseons\Collections\Env;
-use Baseons\Collections\Hash;
 use Baseons\Collections\Http\HTTP;
 use Baseons\Collections\Lang;
 use Baseons\Collections\Mime;
@@ -283,6 +282,19 @@ if (!function_exists('str')) {
     function str()
     {
         return new Str();
+    }
+}
+
+if (!function_exists('url')) {
+    function url(string|null $path = null, array|null $query = null)
+    {
+        $url = (request()->https() ? 'https' : 'http') . '://';
+        $url .= $_SERVER['HTTP_HOST'] ?? config()->app('url', '');
+
+        if ($path !== null) $url .= '/' . trim($path, '/');
+        if ($query and count($query)) $url .= '?' . http_build_query($query);
+
+        return $url;
     }
 }
 

@@ -3,7 +3,7 @@
 $path = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
 // request
-function method()
+function web_server_method()
 {
     $accepted = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'COPY', 'OPTIONS', 'LOCK', 'UNLOCK'];
 
@@ -16,12 +16,12 @@ function method()
     return in_array(strtoupper($method), $accepted) ? $method : 'GET';
 }
 
-function url()
+function web_server_url()
 {
     return 'http://' . trim("$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]", '/');
 }
 
-function WebServerMessage($message)
+function web_server_message($message)
 {
     $message = json_encode($message) . "\n";
     $stdout = fopen('php://stdout', 'w');
@@ -1264,22 +1264,22 @@ if ($path !== '/' and is_file($root . 'public' . $path)) {
         header('Content-Length: ' . filesize($file));
 
         $message['file'] = [
-            'url' => url(),
+            'url' => web_server_url(),
             'size' => filesize($file)
         ];
 
-        WebServerMessage($message);
+        web_server_message($message);
 
         return readfile($file);
     }
 } else {
     $message['request'] = [
-        'method' => method(),
-        'url' => url(),
+        'method' => web_server_method(),
+        'url' => web_server_url(),
         'size' => $_SERVER['CONTENT_LENGTH']
     ];
 
-    WebServerMessage($message);
+    web_server_message($message);
 
     require_once($root . 'public/index.php');
 }
