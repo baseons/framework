@@ -77,7 +77,7 @@ class Hash
     /**
      * @return string
      */
-    public static function encrypt(string $value, string $key,  string|null $cipher = null)
+    public static function encrypt(string $value, string $key, string $cipher = 'AES-256-GCM')
     {
         $cipher = self::cypher($cipher);
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher['name']));
@@ -102,7 +102,7 @@ class Hash
     /**
      * @return string|null
      */
-    public static function decrypt(string $value, string $key, string|null $cipher = null)
+    public static function decrypt(string $value, string $key, string $cipher = 'AES-256-GCM')
     {
         $cipher = self::cypher($cipher);
         $decoded = base64_decode($value);
@@ -174,10 +174,8 @@ class Hash
         return $payload;
     }
 
-    private static function cypher(string|null $cipher = null)
+    private static function cypher(string|null $cipher = 'AES-256-GCM')
     {
-        $cipher = $cipher === null ? strtolower(Config::app('encryption.cipher') ?? 'aes-256-gcm') : $cipher;
-
         $supportedCiphers = [
             'aes-128-cbc' => ['size' => 16, 'aead' => false],
             'aes-256-cbc' => ['size' => 32, 'aead' => false],
