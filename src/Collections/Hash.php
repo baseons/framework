@@ -138,7 +138,7 @@ class Hash
     /**
      * Make token JWT
      */
-    public static function jwtEncode(array $payload, string $secret, string $alg = 'HS256')
+    public static function jwtEncode(mixed $payload, string $secret, string $alg = 'HS256')
     {
         $header = json_encode(['typ' => 'JWT', 'alg' => $alg]);
 
