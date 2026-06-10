@@ -88,7 +88,12 @@ class Request
      */
     public function url()
     {
-        return ($this->https() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        return ($this->https() ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '/');
+    }
+
+    public function path()
+    {
+       return parse_url($_SERVER['REQUEST_URI'] ?? $this->url(), PHP_URL_PATH);
     }
 
     public function userAgent()
