@@ -50,7 +50,7 @@ class Builder extends BuilderController
     {
         unset($this->params['columns']);
 
-        if (count($columns)) $this->select($columns);
+        if (count($columns)) $this->select(...$columns);
 
         return $this;
     }
