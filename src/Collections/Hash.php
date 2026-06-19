@@ -174,8 +174,10 @@ class Hash
         return $payload;
     }
 
-    private static function cypher(string|null $cipher = 'AES-256-GCM')
+    private static function cypher(string $cipher = 'AES-256-GCM')
     {
+        $cipher = strtolower($cipher);
+
         $supportedCiphers = [
             'aes-128-cbc' => ['size' => 16, 'aead' => false],
             'aes-256-cbc' => ['size' => 32, 'aead' => false],
