@@ -53,7 +53,7 @@ class WebSocketServer
             $this->server->set([
                 // Only 1 worker should be used because variables in memory are not shared between them.
                 'worker_num' => $params['workers'],
-                'max_connection' => $params['connections'] ?? 1000000,
+                'max_connection' => $params['connections'] ?? 1000000000,
 
                 'reload_async' => true,
                 // 'max_request' => 10000,
