@@ -135,49 +135,8 @@ class Hash
         return new OTP();
     }
 
-    /**
-     * Make token JWT
-     */
-    public static function jwtEncode(mixed $payload, string $secret, string $alg = 'HS256')
+    private static function cypher(string|null $cipher = 'AES-256-GCM')
     {
-        $header = json_encode(['typ' => 'JWT', 'alg' => $alg]);
-
-        $base64UrlHeader = self::base64UrlEncode($header);
-        $base64UrlPayload = self::base64UrlEncode(json_encode($payload));
-
-        $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $secret, true);
-        $base64UrlSignature = self::base64UrlEncode($signature);
-
-        return $base64UrlHeader . '.' . $base64UrlPayload . '.' . $base64UrlSignature;
-    }
-
-    /**
-     * Decode token JWT
-     */
-    public static function jwtDecode(string $token, string $secret)
-    {
-        $parts = explode('.', $token);
-
-        if (count($parts) !== 3) return null;
-
-        [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = $parts;
-
-        $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $secret, true);
-        $validSignature = self::base64UrlEncode($signature);
-
-        if (!hash_equals($validSignature, $base64UrlSignature)) return null;
-
-        $payload = json_decode(self::base64UrlDecode($base64UrlPayload), true);
-
-        if (isset($payload['exp']) && $payload['exp'] < time()) return null; // Token expirado
-
-        return $payload;
-    }
-
-    private static function cypher(string $cipher = 'AES-256-GCM')
-    {
-        $cipher = strtolower($cipher);
-
         $supportedCiphers = [
             'aes-128-cbc' => ['size' => 16, 'aead' => false],
             'aes-256-cbc' => ['size' => 32, 'aead' => false],
@@ -196,19 +155,98 @@ class Hash
         return $supportedCiphers[$cipher];
     }
 
-    private static function base64UrlEncode(string $data)
+    public static function jwtEncode(array $payload, string $secret, string $alg = 'HS256')
     {
-        $base64 = base64_encode($data);
+        $alg = strtoupper($alg);
 
-        return str_replace(['+', '/', '='], ['-', '_', ''], $base64);
+        $algorithms = [
+            'HS256' => 'sha256',
+            'HS384' => 'sha384',
+            'HS512' => 'sha512',
+        ];
+
+        if (!isset($algorithms[$alg])) throw new InvalidArgumentException('Algoritmo JWT não suportado.');
+
+        $header = [
+            'typ' => 'JWT',
+            'alg' => $alg,
+        ];
+
+        $base64UrlHeader = self::base64UrlEncode(json_encode($header, JSON_UNESCAPED_SLASHES));
+        $base64UrlPayload = self::base64UrlEncode(json_encode($payload, JSON_UNESCAPED_SLASHES));
+
+        $signature = hash_hmac($algorithms[$alg], $base64UrlHeader . '.' . $base64UrlPayload, $secret, true);
+
+        $base64UrlSignature = self::base64UrlEncode($signature);
+
+        return implode('.', [
+            $base64UrlHeader,
+            $base64UrlPayload,
+            $base64UrlSignature
+        ]);
     }
 
-    private static function base64UrlDecode(string $data)
+
+    public static function jwtDecode(string $token, string $secret)
     {
-        $remainder = strlen($data) % 4;
+        $parts = explode('.', $token);
 
-        if ($remainder) $data .= str_repeat('=', 4 - $remainder);
+        if (count($parts) !== 3) return null;        
 
-        return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
+        [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = $parts;
+
+        $headerJson = self::base64UrlDecode($base64UrlHeader);
+        $payloadJson = self::base64UrlDecode($base64UrlPayload);
+
+        if ($headerJson === null || $payloadJson === null) return null;
+
+        $header = json_decode($headerJson, true);
+        $payload = json_decode($payloadJson, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($header) || !is_array($payload)) return null;
+
+        $algorithms = [
+            'HS256' => 'sha256',
+            'HS384' => 'sha384',
+            'HS512' => 'sha512',
+        ];
+
+        $alg = $header['alg'] ?? null;
+
+        if (!$alg || !isset($algorithms[$alg])) return null;
+
+        $expectedSignature = hash_hmac($algorithms[$alg], $base64UrlHeader . '.' . $base64UrlPayload, $secret, true);
+
+        $expectedSignature = self::base64UrlEncode($expectedSignature);
+
+        if (!hash_equals($expectedSignature, $base64UrlSignature)) return null;
+
+        $now = time();
+
+        if (isset($payload['exp']) and is_numeric($payload['exp']) and $payload['exp'] < $now) return null;
+        if (isset($payload['nbf']) and is_numeric($payload['nbf']) and $payload['nbf'] > $now) return null;
+
+        // iat = issued at
+        if (isset($payload['iat']) and is_numeric($payload['iat']) and $payload['iat'] > $now) return null;
+
+        return $payload;
+    }
+
+    private static function base64UrlEncode(string $data): string
+    {
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+    }
+
+    private static function base64UrlDecode(string $data): ?string
+    {
+        $data = strtr($data, '-_', '+/');
+
+        $padding = strlen($data) % 4;
+
+        if ($padding > 0) $data .= str_repeat('=', 4 - $padding);
+
+        $decoded = base64_decode($data, true);
+
+        return $decoded === false ? null : $decoded;
     }
 }
