@@ -63,7 +63,6 @@ class Table
     {
         if (in_array($this->config['driver'], ['mysql', 'pgsql', 'mariadb'])) {
             $query = DB::query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND TABLE_TYPE = 'BASE TABLE'", [$this->config['database'], $table], $this->config['name'])->fetch(PDO::FETCH_ASSOC);
-
             if (!empty($query)) return true;
         } else {
             $this->driverError($this->config['driver']);

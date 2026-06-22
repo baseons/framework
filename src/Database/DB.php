@@ -38,11 +38,6 @@ class DB
         return $query;
     }
 
-    public static function raw(string $value)
-    {
-        return fn () => $value;
-    }
-
     /**
      * Query table
      */

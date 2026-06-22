@@ -8,6 +8,7 @@ use Baseons\Database\Migration\Scheme\Columns;
 use Baseons\Database\Migration\Scheme\Table;
 use Baseons\Database\Migration\Scheme\Memory;
 use Baseons\Database\Query\Scheme;
+use PDO;
 use Throwable;
 
 class MigrationRunner
@@ -74,7 +75,7 @@ class MigrationRunner
 
         $this->migrationTable();
 
-        $check = DB::table('migrations')->connection($this->connection)->select(['id', 'count'])->where('migration', $this->name)->first();
+        $check = DB::table('migrations')->connection($this->connection)->select(['id', 'count'])->where('migration', $this->name)->fetchMode(PDO::FETCH_OBJ)->first();   
 
         if (!empty($check->id) and !$force) return;
 

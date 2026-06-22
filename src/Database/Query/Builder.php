@@ -3,6 +3,7 @@
 namespace Baseons\Database\Query;
 
 use InvalidArgumentException;
+use PDO;
 
 class Builder extends BuilderController
 {
@@ -10,6 +11,11 @@ class Builder extends BuilderController
      * Standard env connection
      */
     protected string|null $connection = null;
+
+    /**
+     * Fetch mode
+     */
+    protected string|null $fetch_mode = null;
 
     /**
      * Use a specific connection
@@ -831,6 +837,13 @@ class Builder extends BuilderController
         return $this;
     }
 
+    public function fetchMode(int|string $mode)
+    {
+        $this->fetch_mode = $mode;
+
+        return $this;
+    }
+
     /**
      * Add a "distinct" clause to the query
      */
@@ -951,7 +964,7 @@ class Builder extends BuilderController
 
         $build = $this->executeProcessor('select', $this->connection);
 
-        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, false);
+        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, false, mode: $this->fetch_mode);
     }
 
     /**
@@ -964,7 +977,7 @@ class Builder extends BuilderController
 
         $build = $this->executeProcessor('select', $this->connection);
 
-        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection);
+        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, mode: $this->fetch_mode);
     }
 
     public function update(array $values)
@@ -1087,7 +1100,7 @@ class Builder extends BuilderController
 
         $build = $this->executeProcessor('select', $this->connection);
 
-        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection);
+        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, mode: $this->fetch_mode);
     }
 
     /**
@@ -1098,7 +1111,7 @@ class Builder extends BuilderController
     {
         $build = $this->executeProcessor('select', $this->connection);
 
-        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, count: true);
+        return (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, count: true, mode: $this->fetch_mode);
     }
 
     /**
@@ -1109,7 +1122,7 @@ class Builder extends BuilderController
     {
         $build = $this->executeProcessor('exists', $this->connection);
 
-        $result = (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, false);
+        $result = (new RunQuery)->select($build['query'], $build['bindparams'], $this->connection, false, mode: $this->fetch_mode);
         $result = is_array($result) ? $result['exists'] : $result->exists;
 
         return $result ? true : false;
