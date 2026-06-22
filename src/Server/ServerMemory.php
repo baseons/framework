@@ -6,7 +6,7 @@ class ServerMemory
 {
     public static array $servers = [
         'websocket' => [],
-        'htttp' => []
+        'http' => []
     ];
 
     protected static array $attributes = [
@@ -62,7 +62,7 @@ class ServerMemory
     {
         self::$servers = [
             'websocket' => [],
-            'htttp' => []
+            'http' => []
         ];
 
         self::$attributes = [
