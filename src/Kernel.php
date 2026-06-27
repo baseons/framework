@@ -33,7 +33,7 @@ class Kernel
      */
     public static function run()
     {
-        if (!defined('BASEONS_START')) define('BASEONS_START', microtime(true));
+        if (!defined('FRAMEWORK_START')) define('FRAMEWORK_START', microtime(true));
 
         ini_set('display_errors', 1);
         ini_set('display_startup_erros', 1);
@@ -198,8 +198,8 @@ class Kernel
      */
     public static function terminate()
     {
-        if (!defined('BASEONS_STOP')) define('BASEONS_STOP', microtime(true));
-        if (!defined('BASEONS_MS')) define('BASEONS_MS', number_format((BASEONS_STOP - BASEONS_START) * 1000, 6, '.', '')); // ms
+        if (!defined('FRAMEWORK_STOP')) define('FRAMEWORK_STOP', microtime(true));
+        if (!defined('FRAMEWORK_MS')) define('FRAMEWORK_MS', number_format((FRAMEWORK_STOP - FRAMEWORK_START) * 1000, 6, '.', '')); // ms
 
         foreach (self::$terminators as $callback) executeCallable($callback);
 
