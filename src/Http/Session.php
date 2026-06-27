@@ -30,9 +30,9 @@ class Session
      */
     public static function old(int|string|null $key = null, mixed $default = null)
     {
-        if ($key === null) return arr()->get($_SESSION, 'request_with.value', $default);
+        if ($key === null) return arr()->get($_SESSION, 'framework.with.value', $default);
 
-        return arr()->get($_SESSION, 'request_with.value.' . $key, $default);
+        return arr()->get($_SESSION, 'framework.with.value.' . $key, $default);
     }
 
     /**
@@ -40,7 +40,7 @@ class Session
      */
     public static function with(mixed $value = null)
     {
-        return arr()->set($_SESSION, 'request_with', [
+        return arr()->set($_SESSION, 'framework.with', [
             'view' => false,
             'value' => $value
         ]);

@@ -108,8 +108,8 @@ class Kernel
             ob_start();
             session_start();
 
-            $request_with = arr()->get($_SESSION, 'request_with.view');
-            if ($request_with !== null and $request_with === false) arr()->set($_SESSION, 'request_with.view', true);
+            $with = arr()->get($_SESSION, 'framework.with.view');
+            if ($with !== null and $with === false) arr()->set($_SESSION, 'framework.with.view', true);
 
             // load helpers
             foreach (self::$configs['app']['helpers'] as $helper) require_once $helper;
@@ -203,7 +203,7 @@ class Kernel
 
         foreach (self::$terminators as $callback) executeCallable($callback);
 
-        if (session_status() === PHP_SESSION_ACTIVE and arr()->get($_SESSION, 'request_with.view', false)) arr()->unset($_SESSION, 'request_with');
+        if (session_status() === PHP_SESSION_ACTIVE and arr()->get($_SESSION, 'framework.with.view', false)) arr()->unset($_SESSION, 'framework.with');
 
         while (ob_get_level()) ob_end_flush();
 
