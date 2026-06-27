@@ -58,7 +58,7 @@ class Path
     {
         $path = self::pathPart($path);
 
-        $base = DIRECTORY_BASEONS;
+        $base = DIRECTORY_FRAMEWORK;
 
         return $path === null ? $base : $base . DIRECTORY_SEPARATOR . $path;
     }
