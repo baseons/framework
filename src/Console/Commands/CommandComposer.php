@@ -39,7 +39,7 @@ class CommandComposer
         $path_env = path('.env');
 
         if (!file_exists($path_env)) storage()->makeFile($path_env, view('env', [
-            'app_key' => Hash::createTokenString(special: null)
+            'app_key' => Hash::createTokenString(40, special: null)
         ], false, path()->framework('Templates')));
     }
 }
