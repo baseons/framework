@@ -7,11 +7,6 @@ use RuntimeException;
 
 class Hash
 {
-    public static function createKey()
-    {
-        return random_bytes(self::cypher()['size']);
-    }
-
     public static function createPassword(string $password)
     {
         return password_hash($password, PASSWORD_DEFAULT);
@@ -191,7 +186,7 @@ class Hash
     {
         $parts = explode('.', $token);
 
-        if (count($parts) !== 3) return null;        
+        if (count($parts) !== 3) return null;
 
         [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = $parts;
 

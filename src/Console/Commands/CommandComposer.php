@@ -27,7 +27,6 @@ class CommandComposer
             path()->base('tests'),
             path()->base('database/seeders'),
             path()->base('database/migrations')
-
         ];
 
         $sessions_path = config()->session('path');
@@ -40,7 +39,7 @@ class CommandComposer
         $path_env = path('.env');
 
         if (!file_exists($path_env)) storage()->makeFile($path_env, view('env', [
-            'app_key' => 'base64:' . base64_encode(Hash::createKey())
+            'app_key' => Hash::createTokenString(special: null)
         ], false, path()->framework('Templates')));
     }
 }

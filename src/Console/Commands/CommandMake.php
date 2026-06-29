@@ -81,7 +81,7 @@ class CommandMake
             }
         }
 
-        $result = Env::updateOrChange('APP_KEY', 'base64:' . base64_encode(Hash::createKey()));
+        $result = Env::updateOrChange('APP_KEY', Hash::createTokenString(special: null));
 
         if ($result) Shell::green('APP_KEY ' . ($create ? 'created' : 'updated'))->br();
         else Shell::red('failed to ' . ($create ? 'created' : 'updated') . ' APP_KEY')->br();
@@ -104,7 +104,7 @@ class CommandMake
 
         // env
         $template = view('env', [
-            'app_key' => 'base64:' . base64_encode(Hash::createKey())
+            'app_key' => Hash::createTokenString(special: null)
         ], false, path()->framework('Templates'));
 
         storage()->makeFile($path, $template);
