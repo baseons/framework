@@ -82,7 +82,7 @@ class CompilerPHP
 
             // old
             if ($value['tag'] == 'old') {
-                $this->view = str_replace($value['original'], '<?php echo request()->old(' . trim($value['value'], '\(\)') . ',"")' . ' ?>', $this->view);
+                $this->view = str_replace($value['original'], '<?php echo request()->old' . $value['value'] . ' ?>', $this->view);
                 continue;
             }
 
