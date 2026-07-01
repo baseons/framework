@@ -184,7 +184,7 @@ class Controller
                     else $status = 'failed';
                 } elseif (!$online and self::start($server['id'])) {
                     $result['started'][] = $server;
-                        $status = 'started';
+                    $status = 'started';
                 } else {
                     $result['failed'][] = $server;
                     $status = 'failed';
@@ -207,6 +207,7 @@ class Controller
     public static function request(string $name, array $data = [], string $method = 'POST', array $headers = [])
     {
         self::load();
+
         $app_key = env('APP_KEY');
 
         if (empty($app_key)) return false;
@@ -253,6 +254,8 @@ class Controller
 
                 if ($params['protocol'] == 'ws') {
                     self::$servers[$type][$key]['route'] = self::$servers[$type][$key]['ssl']['active'] ? 'wss://' : 'ws://';
+                } elseif ($params['protocol'] == 'http') {
+                    self::$servers[$type][$key]['route'] = self::$servers[$type][$key]['ssl']['active'] ? 'https://' : 'http://';
                 }
 
                 if (!empty($params['alias'])) self::$servers[$type][$key]['route'] .= $params['alias'];

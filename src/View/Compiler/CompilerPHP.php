@@ -71,6 +71,15 @@ class CompilerPHP
                 continue;
             }
 
+            // server
+            elseif ($value['tag'] == 'server') {
+                if (!empty($value['value'])) {
+                    $this->view = str_replace($value['original'], '<?php echo server' . $value['value'] . ' ?>', $this->view);
+                }
+
+                continue;
+            }
+
             // old
             if ($value['tag'] == 'old') {
                 $this->view = str_replace($value['original'], '<?php echo request()->old(' . trim($value['value'], '\(\)') . ',"")' . ' ?>', $this->view);
