@@ -57,4 +57,16 @@ class Route
 
         return $current;
     }
+
+    /**
+     * @return bool
+     */
+    public static function is(string $name)
+    {
+        $current = self::current();
+
+        if (!$current) return false;
+
+        return $current['name'] == $name;
+    }
 }
